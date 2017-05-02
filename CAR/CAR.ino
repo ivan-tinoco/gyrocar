@@ -18,7 +18,8 @@ int in3=7;
 int in4=6;
 int ENA=5;
 int ENB=3;
-int ABS = 130;
+int ctrlSpeed1 = 150;
+int ctrlSpeed2 = 160;
 
 //TX Control counter
 int count = 0;
@@ -26,8 +27,8 @@ int count = 0;
 //Car-movement control functions:
 void _mForward()
 { 
-digitalWrite(ENA,ABS);
-digitalWrite(ENB,ABS);
+analogWrite(ENA,ctrlSpeed1);
+analogWrite(ENB,ctrlSpeed1);
 digitalWrite(in1,LOW);
 digitalWrite(in2,HIGH);
 digitalWrite(in3,LOW);
@@ -36,8 +37,8 @@ Serial.println("forward");
 }
 void _mBack()
 {
-digitalWrite(ENA,ABS);
-digitalWrite(ENB,ABS);
+analogWrite(ENA,ctrlSpeed1);
+analogWrite(ENB,ctrlSpeed1);
 digitalWrite(in1,HIGH);
 digitalWrite(in2,LOW);
 digitalWrite(in3,HIGH);
@@ -46,8 +47,8 @@ Serial.println("back");
 }
 void _mleft()
 {
-digitalWrite(ENA,ABS);
-digitalWrite(ENB,ABS);
+analogWrite(ENA,ctrlSpeed2);
+analogWrite(ENB,ctrlSpeed2);
 digitalWrite(in1,LOW);
 digitalWrite(in2,HIGH);
 digitalWrite(in3,HIGH);
@@ -56,8 +57,8 @@ Serial.println("left");
 }
 void _mright()
 {
-digitalWrite(ENA,ABS);
-digitalWrite(ENB,ABS);
+analogWrite(ENA,ctrlSpeed2);
+analogWrite(ENB,ctrlSpeed2);
 digitalWrite(in1,HIGH);
 digitalWrite(in2,LOW);
 digitalWrite(in3,LOW);
