@@ -1,6 +1,6 @@
 /*  ME106 Term Project
-*  SJSU - Spring 2017
-*  Hand Gesture Controlled Robotic Car*/
+   SJSU - Spring 2017
+   Hand Gesture Controlled Robotic Car*/
 
 /*Code to control DC-Motors, RF Receiver, Unltasonic Sensor and Servo*/
 //CAR-MODULE
@@ -30,12 +30,12 @@ int pwm;
 
 //DC-motor driver control
 //ports
-int in1=9;
-int in2=8;
-int in3=7;
-int in4=6;
-int ENA=5;
-int ENB=3;
+int in1 = 9;
+int in2 = 8;
+int in3 = 7;
+int in4 = 6;
+int ENA = 5;
+int ENB = 3;
 //global variables
 int ctrlSpeed1 = 150;
 int ctrlSpeed2 = 120;
@@ -45,71 +45,71 @@ int count = 0;
 
 //Car-movement control functions:
 void _mForward()
-{ 
-  analogWrite(ENA,ctrlSpeed1);
-  analogWrite(ENB,ctrlSpeed2);
-  digitalWrite(in1,LOW);
-  digitalWrite(in2,HIGH);
-  digitalWrite(in3,LOW);
-  digitalWrite(in4,HIGH);
+{
+  analogWrite(ENA, ctrlSpeed1);
+  analogWrite(ENB, ctrlSpeed2);
+  digitalWrite(in1, LOW);
+  digitalWrite(in2, HIGH);
+  digitalWrite(in3, LOW);
+  digitalWrite(in4, HIGH);
   Serial.println("forward"); //debugging
 }
 void _mBack()
 {
-  analogWrite(ENA,ctrlSpeed2);
-  analogWrite(ENB,ctrlSpeed2);
-  digitalWrite(in1,HIGH);
-  digitalWrite(in2,LOW);
-  digitalWrite(in3,HIGH);
-  digitalWrite(in4,LOW);
+  analogWrite(ENA, ctrlSpeed2);
+  analogWrite(ENB, ctrlSpeed2);
+  digitalWrite(in1, HIGH);
+  digitalWrite(in2, LOW);
+  digitalWrite(in3, HIGH);
+  digitalWrite(in4, LOW);
   Serial.println("back"); //debugging
 }
 void _mleft()
 {
-  analogWrite(ENA,ctrlSpeed2);
-  analogWrite(ENB,ctrlSpeed2);
-  digitalWrite(in1,LOW);
-  digitalWrite(in2,HIGH);
-  digitalWrite(in3,HIGH);
-  digitalWrite(in4,LOW);
+  analogWrite(ENA, ctrlSpeed2);
+  analogWrite(ENB, ctrlSpeed2);
+  digitalWrite(in1, LOW);
+  digitalWrite(in2, HIGH);
+  digitalWrite(in3, HIGH);
+  digitalWrite(in4, LOW);
   Serial.println("left"); //debugging
 }
 void _mright()
 {
-  analogWrite(ENA,ctrlSpeed2);
-  analogWrite(ENB,ctrlSpeed2);
-  digitalWrite(in1,HIGH);
-  digitalWrite(in2,LOW);
-  digitalWrite(in3,LOW);
-  digitalWrite(in4,HIGH);
+  analogWrite(ENA, ctrlSpeed2);
+  analogWrite(ENB, ctrlSpeed2);
+  digitalWrite(in1, HIGH);
+  digitalWrite(in2, LOW);
+  digitalWrite(in3, LOW);
+  digitalWrite(in4, HIGH);
   Serial.println("right");  //debugging
 }
 void _mStop()
 {
-  digitalWrite(ENA,LOW);
-  digitalWrite(ENB,LOW);
+  digitalWrite(ENA, LOW);
+  digitalWrite(ENB, LOW);
   Serial.println("STOP"); //debugging
 }
 
 //Ultrasonic distance measurement
-int Distance_test()   
+int Distance_test()
 {
-  digitalWrite(Trig, LOW);   
+  digitalWrite(Trig, LOW);
   delayMicroseconds(2);
-  digitalWrite(Trig, HIGH);  
+  digitalWrite(Trig, HIGH);
   delayMicroseconds(20);
-  digitalWrite(Trig, LOW);   
-  float Fdistance = pulseIn(Echo, HIGH);  
-  Fdistance= Fdistance/58;       
+  digitalWrite(Trig, LOW);
+  float Fdistance = pulseIn(Echo, HIGH);
+  Fdistance = Fdistance / 58;
   return (int)Fdistance;
-} 
+}
 
-//Servo control sub-function 
+//Servo control sub-function
 void myServo(int servo, int angle)
 {
-  for(int i=0; i<10; i++)
+  for (int i = 0; i < 10; i++)
   {
-    pwm = (angle*11) + 500;      // Convert angle to microseconds
+    pwm = (angle * 11) + 500;    // Convert angle to microseconds
     digitalWrite(servo, HIGH);
     delayMicroseconds(pwm);
     digitalWrite(servo, LOW);
@@ -123,20 +123,20 @@ void setup()
   pinMode(servo, OUTPUT);
 
   //Ultrasonic sensor pins
-  pinMode(Echo, INPUT);    
-  pinMode(Trig, OUTPUT); 
+  pinMode(Echo, INPUT);
+  pinMode(Trig, OUTPUT);
 
   //Motor-driver control pins
-  pinMode(in1,OUTPUT);
-  pinMode(in2,OUTPUT);
-  pinMode(in3,OUTPUT);
-  pinMode(in4,OUTPUT);
-  pinMode(ENA,OUTPUT);
-  pinMode(ENB,OUTPUT);
+  pinMode(in1, OUTPUT);
+  pinMode(in2, OUTPUT);
+  pinMode(in3, OUTPUT);
+  pinMode(in4, OUTPUT);
+  pinMode(ENA, OUTPUT);
+  pinMode(ENB, OUTPUT);
 
   //Serial Comm use to debug
   Serial.begin(9600);
-  
+
   _mStop();
 
   //RF module initialize:
@@ -147,7 +147,7 @@ void loop()
 {
   //Servo + obstacle checking
 
-  
+
   //Radio-head library ADC processing:
   uint8_t buf[RH_ASK_MAX_MESSAGE_LEN];
   uint8_t buflen = sizeof(buf);
@@ -157,57 +157,57 @@ void loop()
   {
     count = 0; //initialize counter
     Serial.println(buf[0]); //debugging
-    
-    if(buf[0]=='0')
+
+    if (buf[0] == '0')
     {
       _mForward();
       Serial.print("SERVO CHECK");  //debugging
       myServo(servo, 65);//set servo position
       middleDistance = Distance_test(); //get obstacle distance
-      #ifdef send
+#ifdef send
       Serial.print("middleDistance=");  //debugging
       Serial.println(middleDistance);   //debugging
-      #endif
-      
-      if(middleDistance<=50) // detects obstacle and decides where to turn
-      {     
+#endif
+
+      if (middleDistance <= 50) // detects obstacle and decides where to turn
+      {
         _mStop();
-        delay(500);                         
-        myServo(servo, 0);          
-        delay(1000);      
+        delay(500);
+        myServo(servo, 0);
+        delay(1000);
         rightDistance = Distance_test();
 
-        #ifdef send
+#ifdef send
         Serial.print("rightDistance=");
         Serial.println(rightDistance);
-        #endif
-        
+#endif
+
         delay(500);
-        myServo(servo, 90);              
-        delay(1000);                                                  
-        myServo(servo, 180);              
-        delay(1000); 
+        myServo(servo, 90);
+        delay(1000);
+        myServo(servo, 180);
+        delay(1000);
         leftDistance = Distance_test();
-        
-        #ifdef send
+
+#ifdef send
         Serial.print("leftDistance=");
         Serial.println(leftDistance);
-        #endif
-        
+#endif
+
         delay(500);
-        myServo(servo, 90);              
+        myServo(servo, 90);
         delay(1000);
-        if(rightDistance>leftDistance)  
+        if (rightDistance > leftDistance)
         {
           _mright();
           delay(180);
         }
-        else if(rightDistance<leftDistance)
+        else if (rightDistance < leftDistance)
         {
           _mleft();
           delay(180);
         }
-        else if((rightDistance<=20)||(leftDistance<=20))
+        else if ((rightDistance <= 20) || (leftDistance <= 20))
         {
           _mBack();
           delay(180);
@@ -216,24 +216,24 @@ void loop()
         {
           _mForward();
         }
-      }  
+      }
       else
-        _mForward();  
-    } 
-    else if(buf[0]=='1')
+        _mForward();
+    }
+    else if (buf[0] == '1')
     {
       _mBack();
-    }  
-    else if(buf[0]=='2')
+    }
+    else if (buf[0] == '2')
     {
       _mright();
     }
-    else if(buf[0]=='3')
+    else if (buf[0] == '3')
     {
       _mleft();
-    }   
-    else if(buf[0]=='4')
-    { 
+    }
+    else if (buf[0] == '4')
+    {
       _mStop();
     }
     else
@@ -246,10 +246,10 @@ void loop()
     count++;
   }
 
-//  Serial.println(count); //debugging
+  //  Serial.println(count); //debugging
   if (count > 200 ) //Transmission lost
   {
     _mStop();
   }
-} 
+}
 
