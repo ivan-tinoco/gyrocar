@@ -14,14 +14,14 @@ int in3 = 7;
 int in4 = 6;
 int ENA = 5;
 int ENB = 3;
-int ABS = 120;
-int ctrlSpeed2 = 255;
+int ABS = 150;
+int ctrlSpeed2 = 120;
 
 int rightDistance = 0, leftDistance = 0, middleDistance = 0 ;
 void _mForward()
 {
   analogWrite(ENA, ABS);
-  analogWrite(ENB, ABS);
+  analogWrite(ENB, ctrlSpeed2);
   digitalWrite(in1, LOW);
   digitalWrite(in2, HIGH);
   digitalWrite(in3, LOW);
@@ -105,7 +105,7 @@ void loop()
   Serial.println(middleDistance);
   //    #endif
 
-  if (middleDistance <= 20)
+  if (middleDistance <= 30)
   {
     _mStop();
     delay(500);
@@ -135,7 +135,7 @@ void loop()
     delay(1000);
     if (rightDistance > leftDistance)
     {
-      for (int i = 0; i < 10; i++)
+      for (int i = 0; i < 5; i++)
       {
         _mright();
         delay(180);
@@ -143,7 +143,7 @@ void loop()
     }
     else if (rightDistance < leftDistance)
     {
-      for (int i = 0; i < 10; i++)
+      for (int i = 0; i < 5; i++)
       {
         _mleft();
         delay(180);
@@ -151,9 +151,14 @@ void loop()
     }
     else if ((rightDistance <= 20) || (leftDistance <= 20))
     {
-      for (int i = 0; i < 10; i++)
+      for (int i = 0; i < 2; i++)
       {
         _mBack();
+        delay(180);
+      }
+      for (int i = 0; i < 8; i++)
+      {
+        _mright();
         delay(180);
       }
     }
