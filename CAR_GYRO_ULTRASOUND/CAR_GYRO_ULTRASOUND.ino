@@ -43,6 +43,9 @@ int ctrlSpeed2 = 120;
 //TX Control counter
 int count = 0;
 
+//Debugging
+#define DEBUG  //uncomment to print debug data
+
 //Car-movement control functions:
 void _mForward()
 {
@@ -145,9 +148,6 @@ void setup()
 
 void loop()
 {
-  //Servo + obstacle checking
-
-
   //Radio-head library ADC processing:
   uint8_t buf[RH_ASK_MAX_MESSAGE_LEN];
   uint8_t buflen = sizeof(buf);
@@ -156,20 +156,25 @@ void loop()
   if (driver.recv(buf, &buflen)) // Non-blocking
   {
     count = 0; //initialize counter
+
+    #ifdef DEBUG
+    Serial.print("BUFFER ==> ");
     Serial.println(buf[0]); //debugging
+    #endif
 
     if (buf[0] == '0')
     {
       _mForward();
-      Serial.print("SERVO CHECK");  //debugging
+
+      //Obstacle avoidance
       myServo(servo, 65);//set servo position
       middleDistance = Distance_test(); //get obstacle distance
-#ifdef send
+#ifdef DEBUG
       Serial.print("middleDistance=");  //debugging
       Serial.println(middleDistance);   //debugging
 #endif
 
-      if (middleDistance <= 50) // detects obstacle and decides where to turn
+      if (middleDistance <= 40) // detects obstacle and decides where to turn
       {
         _mStop();
         delay(500);
@@ -177,40 +182,55 @@ void loop()
         delay(1000);
         rightDistance = Distance_test();
 
-#ifdef send
+#ifdef DEBUG
         Serial.print("rightDistance=");
         Serial.println(rightDistance);
 #endif
 
         delay(500);
-        myServo(servo, 90);
+        myServo(servo, 65);
         delay(1000);
         myServo(servo, 180);
         delay(1000);
         leftDistance = Distance_test();
 
-#ifdef send
+#ifdef DEBUG
         Serial.print("leftDistance=");
         Serial.println(leftDistance);
 #endif
 
         delay(500);
-        myServo(servo, 90);
+        myServo(servo, 65);
         delay(1000);
+
         if (rightDistance > leftDistance)
         {
-          _mright();
-          delay(180);
+          for (int i = 0; i < 5; i++)
+          {
+            _mright();
+            delay(180);
+          }
         }
         else if (rightDistance < leftDistance)
         {
-          _mleft();
-          delay(180);
+          for (int i = 0; i < 5; i++)
+          {
+            _mleft();
+            delay(180);
+          }
         }
         else if ((rightDistance <= 20) || (leftDistance <= 20))
         {
-          _mBack();
-          delay(180);
+          for (int i = 0; i < 3; i++)
+          {
+            _mBack();
+            delay(180);
+          }
+          for (int i = 0; i < 8; i++)
+          {
+            _mright();
+            delay(180);
+          }
         }
         else
         {
@@ -244,6 +264,10 @@ void loop()
   else //signal not-received, increment counter
   {
     count++;
+    #ifdef DEBUG
+    Serial.print("COUNT ==> ");
+    Serial.println(count);
+    #endif
   }
 
   //  Serial.println(count); //debugging
