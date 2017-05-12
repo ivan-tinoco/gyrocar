@@ -52,17 +52,17 @@ void loop()
   Vector rawAccel = mpu.readRawAccel();
   Vector normAccel = mpu.readNormalizeAccel();
 
-  //  Used to read raw values and debugging
-  //  Serial.print(" Xraw = ");
-  //  Serial.println(rawAccel.XAxis);
-  //  Serial.print(" Yraw = ");
-  //  Serial.println(rawAccel.YAxis);
-  //  Serial.println();
-  //  delay(500);
+//    Used to read raw values and debugging
+//    Serial.print(" Xraw = ");
+//    Serial.println(rawAccel.XAxis);
+//    Serial.print(" Yraw = ");
+//    Serial.println(rawAccel.YAxis);
+//    Serial.println();
+//    delay(500);
   //  Serial.print(" Zraw = ");
   //  Serial.println(rawAccel.ZAxis);
 
-  if (rawAccel.XAxis < -7000 && rawAccel.XAxis > -14000 && rawAccel.YAxis < 5999  && rawAccel.YAxis > -5999) //forward
+  if (rawAccel.XAxis < -7000 && rawAccel.XAxis > -16000 && rawAccel.YAxis < 5999  && rawAccel.YAxis > -5999) //forward
   {
     //LED pins - Debug only
     //    digitalWrite(pinA, LOW);
@@ -73,7 +73,7 @@ void loop()
     //Control Signal
     sendSignal("0");
   }
-  else if (rawAccel.XAxis > 7000 && rawAccel.XAxis < 14000 && rawAccel.YAxis < 5999  && rawAccel.YAxis > -5999) //backward
+  else if (rawAccel.XAxis > 7000 && rawAccel.XAxis < 17000 && rawAccel.YAxis < 5999  && rawAccel.YAxis > -5999) //backward
   {
     //LED pins - Debug only
     //    digitalWrite(pinA, HIGH);
@@ -84,7 +84,7 @@ void loop()
     //Control Signal
     sendSignal("1");
   }
-  else if (rawAccel.YAxis > 7000 && rawAccel.YAxis < 14000 && rawAccel.XAxis < 6999 && rawAccel.XAxis > -6999) //right
+  else if (rawAccel.YAxis > 7000 && rawAccel.YAxis < 16000 && rawAccel.XAxis < 6999 && rawAccel.XAxis > -6999) //right
   {
     //LED pins - Debug only
     //    digitalWrite(pinA, LOW);
@@ -95,7 +95,7 @@ void loop()
     //Control Signal
     sendSignal("2");
   }
-  else if (rawAccel.YAxis < -7000 && rawAccel.YAxis > -14000 && rawAccel.XAxis < 5999 && rawAccel.XAxis > -2999) //left
+  else if (rawAccel.YAxis < -7000 && rawAccel.YAxis > -16000 && rawAccel.XAxis < 5999 && rawAccel.XAxis > -2999) //left
   {
     //LED pins - Debug only
     //    digitalWrite(pinA, HIGH);
